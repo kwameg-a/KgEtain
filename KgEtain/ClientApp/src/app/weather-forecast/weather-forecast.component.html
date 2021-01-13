@@ -1,0 +1,22 @@
+<h1 id="tableLabel">Belfast weather forecast for the next 5 days</h1>
+
+<p *ngIf="!weatherForecasts"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="weatherForecasts">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Weather state</th>
+      <th>Image</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let weatherForecast of weatherForecasts">
+      <td>{{ weatherForecast.applicableDate | date }}</td>
+      <td>{{ weatherForecast.weatherStateName }}</td>
+      <td><img [src]="'https://www.metaweather.com/static/img/weather/png/' + weatherForecast.weatherStateAbbreviation + '.png'" alt="" /></td>
+    </tr>
+  </tbody>
+</table>
+<button class="btn btn-primary" *ngIf="weatherForecasts" (click)="updateWeather()">{{ isRefreshing ? 'Refreshing...' : 'Get latest weather' }}</button>
+
