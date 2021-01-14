@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApiResponseWeather } from '../models/api-response-weather';
 import { WeatherForecast } from '../models/weather-forecast';
 import { WeatherForecastService } from './weather-forecast.service';
@@ -12,21 +13,19 @@ export class WeatherForecastComponent implements OnInit {
   weatherForecasts: WeatherForecast[];
   isRefreshing: boolean;
 
-  constructor(private weatherForecastService: WeatherForecastService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private weatherForecastService: WeatherForecastService) { }
 
   ngOnInit() {
-    this.setWeatherForecasts(false);
+    this.weatherForecasts = this.route.snapshot.data['apiResponseWeather'].consolidatedWeatherList;
   }
 
   updateWeather(): void {
-    this.setWeatherForecasts(true);
+    this.isRefreshing = true;
+    this.weatherForecastService.getWeatherForecast().subscribe((apiResponseWeather: ApiResponseWeather) => {
+      this.weatherForecasts = apiResponseWeather.consolidatedWeatherList;
+      this.isRefreshing = false;
+    }, error => console.error(error));
   }
-
-  private setWeatherForecasts(isRefreshing): void {
-        this.isRefreshing = isRefreshing;
-        this.weatherForecastService.getWeatherForecast().subscribe((apiResponseWeather: ApiResponseWeather) => {
-            this.weatherForecasts = apiResponseWeather.consolidatedWeatherList;
-          this.isRefreshing = false;
-        }, error => console.error(error));
-    }
 }

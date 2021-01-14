@@ -1,5 +1,8 @@
 <body>
   <app-nav-menu></app-nav-menu>
+
+  <div *ngIf="isLoading"><div class="center loader"></div></div>
+
   <div class="container">
     <router-outlet></router-outlet>
   </div>

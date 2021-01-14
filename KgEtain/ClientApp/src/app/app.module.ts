@@ -11,6 +11,7 @@ import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { WeatherForecastComponent } from './weather-forecast/weather-forecast.component';
+import { WeatherForecastResolver } from './weather-forecast/weather-forecast-resolver';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,16 @@ import { WeatherForecastComponent } from './weather-forecast/weather-forecast.co
     ApiAuthorizationModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },      
-      { path: 'weather-forecast', component: WeatherForecastComponent, canActivate: [AuthorizeGuard] }
+      {
+        path: 'weather-forecast',
+        component: WeatherForecastComponent,
+        resolve: { apiResponseWeather: WeatherForecastResolver },
+        canActivate: [AuthorizeGuard]
+      },
+      {
+        path: 'account',
+        loadChildren: () => import('../api-authorization/api-authorization.module').then(m => m.ApiAuthorizationModule)
+      }
     ])
   ],
   providers: [
